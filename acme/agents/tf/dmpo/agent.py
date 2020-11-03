@@ -66,7 +66,8 @@ class DistributionalMPO(agent.Agent):
                logger: loggers.Logger = None,
                counter: counting.Counter = None,
                checkpoint: bool = True,
-               replay_table_name: str = adders.DEFAULT_PRIORITY_TABLE):
+               replay_table_name: str = adders.DEFAULT_PRIORITY_TABLE,
+               return_action_distribution = False):
     """Initialize the agent.
 
     Args:
@@ -139,11 +140,13 @@ class DistributionalMPO(agent.Agent):
     emb_spec = tf2_utils.create_variables(observation_network, [obs_spec])
 
     # Create the behavior policy.
-    behavior_network = snt.Sequential([
+    behavior_modules = [
         observation_network,
         policy_network,
-        networks.StochasticSamplingHead(),
-    ])
+    ]
+    if not return_action_distribution:
+      behavior_modules.append(networks.StochasticSamplingHead())
+    behavior_network = snt.Sequential(behavior_modules)
 
     # Create variables.
     tf2_utils.create_variables(policy_network, [emb_spec])
