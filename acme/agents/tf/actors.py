@@ -68,11 +68,12 @@ class FeedForwardActor(core.Actor):
 
     # Compute the policy, conditioned on the observation.
     policy = self._policy_network(batched_observation)
+    entropy = policy.entropy() if isinstance(policy, tfd.Distribution) else 0
 
     # Sample from the policy if it is stochastic.
     action = policy.sample() if isinstance(policy, tfd.Distribution) else policy
 
-    return (action, policy)
+    return (action, entropy)
 
   def select_action(self, observation: types.NestedArray) -> types.NestedArray:
     # Pass the observation through the policy network.

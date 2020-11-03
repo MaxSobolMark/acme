@@ -67,7 +67,7 @@ class DistributionalMPO(agent.Agent):
                counter: counting.Counter = None,
                checkpoint: bool = True,
                replay_table_name: str = adders.DEFAULT_PRIORITY_TABLE,
-               return_action_distribution = False):
+               return_action_entropy = False):
     """Initialize the agent.
 
     Args:
@@ -144,7 +144,9 @@ class DistributionalMPO(agent.Agent):
         observation_network,
         policy_network,
     ]
-    if not return_action_distribution:
+    if return_action_entropy:
+      behavior_modules.append(networks.SampleAndEntropy())
+    else:
       behavior_modules.append(networks.StochasticSamplingHead())
     behavior_network = snt.Sequential(behavior_modules)
 

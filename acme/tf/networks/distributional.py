@@ -296,3 +296,10 @@ class ApproximateMode(snt.Module):
           return y
         inputs._mode = types.MethodType(_mode, inputs)
     return inputs
+
+class SampleAndEntropy(snt.Module):
+  """Simple sonnet module to get the entropy and a sample
+     from a tfp.Distribution."""
+
+  def __call__(self, distribution: tfd.Distribution):
+    return (distribution.sample(), distribution.sample())
