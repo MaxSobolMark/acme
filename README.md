@@ -2,6 +2,8 @@
 
 # Acme: a research framework for reinforcement learning
 
+The only modification in this version of ACME is that the FeedForwardActor not only samples an action, but also returns the action distribution, to enable MaxEntropy RL.
+
 **[Overview](#overview)** | **[Installation](#installation)** |
 **[Documentation]** | **[Agents]** | **[Examples]** | **[Paper]** |
 **[Blog post]**

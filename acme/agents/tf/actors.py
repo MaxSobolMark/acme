@@ -72,14 +72,14 @@ class FeedForwardActor(core.Actor):
     # Sample from the policy if it is stochastic.
     action = policy.sample() if isinstance(policy, tfd.Distribution) else policy
 
-    return action
+    return (action, policy)
 
   def select_action(self, observation: types.NestedArray) -> types.NestedArray:
     # Pass the observation through the policy network.
-    action = self._policy(observation)
+    action, action_distribution = self._policy(observation)
 
     # Return a numpy array with squeezed out batch dimension.
-    return tf2_utils.to_numpy_squeeze(action)
+    return (tf2_utils.to_numpy_squeeze(action), action_distribution)
 
   def observe_first(self, timestep: dm_env.TimeStep):
     if self._adder:
