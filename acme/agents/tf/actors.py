@@ -68,6 +68,8 @@ class FeedForwardActor(core.Actor):
 
     # Compute the policy, conditioned on the observation.
     policy = self._policy_network(batched_observation)
+    print('Policy: ', policy)
+    print('isinstance(policy, tfd.Distribution): ', isinstance(policy, tfd.Distribution))
     entropy = policy.entropy() if isinstance(policy, tfd.Distribution) else 0
 
     # Sample from the policy if it is stochastic.
