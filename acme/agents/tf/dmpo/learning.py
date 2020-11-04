@@ -16,7 +16,7 @@
 """Distributional MPO learner implementation."""
 
 import time
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import acme
 from acme import types
@@ -55,6 +55,7 @@ class DistributionalMPOLearner(acme.Learner):
       counter: Optional[counting.Counter] = None,
       logger: Optional[loggers.Logger] = None,
       checkpoint: bool = True,
+      extra_modules_to_save: Dict[str, snt.Module] = {},
   ):
 
     # Store online and target networks.
@@ -113,22 +114,24 @@ class DistributionalMPOLearner(acme.Learner):
     self._snapshotter = None
 
     if checkpoint:
+      objects_to_save={
+          'counter': self._counter,
+          'policy': self._policy_network,
+          'critic': self._critic_network,
+          'observation': self._observation_network,
+          'target_policy': self._target_policy_network,
+          'target_critic': self._target_critic_network,
+          'target_observation': self._target_observation_network,
+          'policy_optimizer': self._policy_optimizer,
+          'critic_optimizer': self._critic_optimizer,
+          'dual_optimizer': self._dual_optimizer,
+          'policy_loss_module': self._policy_loss_module,
+          'num_steps': self._num_steps,
+      }
+      objects_to_save = dict(objects_to_save, **extra_modules_to_save)
       self._checkpointer = tf2_savers.Checkpointer(
           subdirectory='dmpo_learner',
-          objects_to_save={
-              'counter': self._counter,
-              'policy': self._policy_network,
-              'critic': self._critic_network,
-              'observation': self._observation_network,
-              'target_policy': self._target_policy_network,
-              'target_critic': self._target_critic_network,
-              'target_observation': self._target_observation_network,
-              'policy_optimizer': self._policy_optimizer,
-              'critic_optimizer': self._critic_optimizer,
-              'dual_optimizer': self._dual_optimizer,
-              'policy_loss_module': self._policy_loss_module,
-              'num_steps': self._num_steps,
-          })
+          objects_to_save=objects_to_save)
 
       self._snapshotter = tf2_savers.Snapshotter(
           objects_to_save={

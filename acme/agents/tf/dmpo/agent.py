@@ -16,6 +16,7 @@
 """Distributional MPO agent implementation."""
 
 import copy
+from typing import Dict
 
 from acme import datasets
 from acme import specs
@@ -66,8 +67,9 @@ class DistributionalMPO(agent.Agent):
                logger: loggers.Logger = None,
                counter: counting.Counter = None,
                checkpoint: bool = True,
+               extra_modules_to_save: Dict[str, snt.Module] = {},
                replay_table_name: str = adders.DEFAULT_PRIORITY_TABLE,
-               return_action_entropy = False):
+               return_action_entropy: bool = False):
     """Initialize the agent.
 
     Args:
@@ -184,7 +186,8 @@ class DistributionalMPO(agent.Agent):
         dataset=dataset,
         logger=logger,
         counter=counter,
-        checkpoint=checkpoint)
+        checkpoint=checkpoint,
+        extra_modules_to_save=extra_modules_to_save)
 
     super().__init__(
         actor=actor,
