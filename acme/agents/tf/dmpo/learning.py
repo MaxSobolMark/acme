@@ -56,6 +56,7 @@ class DistributionalMPOLearner(acme.Learner):
       logger: Optional[loggers.Logger] = None,
       checkpoint: bool = True,
       extra_modules_to_save: Dict[str, snt.Module] = {},
+      checkpoint_name: str = 'dmpo_learner',
   ):
 
     # Store online and target networks.
@@ -130,7 +131,7 @@ class DistributionalMPOLearner(acme.Learner):
       }
       objects_to_save = dict(objects_to_save, **extra_modules_to_save)
       self._checkpointer = tf2_savers.Checkpointer(
-          subdirectory='dmpo_learner',
+          subdirectory=checkpoint_name,
           objects_to_save=objects_to_save)
 
       self._snapshotter = tf2_savers.Snapshotter(

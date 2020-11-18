@@ -68,6 +68,7 @@ class DistributionalMPO(agent.Agent):
                counter: counting.Counter = None,
                checkpoint: bool = True,
                extra_modules_to_save: Dict[str, snt.Module] = {},
+               checkpoint_name: str = 'dmpo_learner',
                replay_table_name: str = adders.DEFAULT_PRIORITY_TABLE,
                return_action_entropy: bool = False):
     """Initialize the agent.
@@ -187,7 +188,8 @@ class DistributionalMPO(agent.Agent):
         logger=logger,
         counter=counter,
         checkpoint=checkpoint,
-        extra_modules_to_save=extra_modules_to_save)
+        extra_modules_to_save=extra_modules_to_save,
+        checkpoint_name=checkpoint_name)
 
     super().__init__(
         actor=actor,
