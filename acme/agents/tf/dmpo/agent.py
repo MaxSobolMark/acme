@@ -107,7 +107,7 @@ class DistributionalMPO(agent.Agent):
 
     # Create a replay server to add data to.
     replay_table = reverb.Table(
-        name=adders.DEFAULT_PRIORITY_TABLE,
+        name=replay_table_name,
         sampler=reverb.selectors.Uniform(),
         remover=reverb.selectors.Fifo(),
         max_size=max_replay_size,
