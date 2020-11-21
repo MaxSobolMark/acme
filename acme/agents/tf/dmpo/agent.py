@@ -16,7 +16,7 @@
 """Distributional MPO agent implementation."""
 
 import copy
-from typing import Dict
+from typing import Dict, Optional
 
 from acme import datasets
 from acme import specs
@@ -70,6 +70,7 @@ class DistributionalMPO(agent.Agent):
                extra_modules_to_save: Dict[str, snt.Module] = {},
                checkpoint_name: str = 'dmpo_learner',
                replay_table_name: str = adders.DEFAULT_PRIORITY_TABLE,
+               replay_server_port: Optional[int] = None,
                return_action_entropy: bool = False):
     """Initialize the agent.
 
@@ -113,7 +114,7 @@ class DistributionalMPO(agent.Agent):
         max_size=max_replay_size,
         rate_limiter=reverb.rate_limiters.MinSize(min_size_to_sample=1),
         signature=adders.NStepTransitionAdder.signature(environment_spec))
-    self._server = reverb.Server([replay_table], port=None)
+    self._server = reverb.Server([replay_table], port=replay_server_port)
 
     # The adder is used to insert observations into replay.
     address = f'localhost:{self._server.port}'
